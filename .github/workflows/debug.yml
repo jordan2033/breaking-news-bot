@@ -1,0 +1,39 @@
+name: Debug Bot
+on: workflow_dispatch
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 📁 List all files
+        run: |
+          echo "=== File Structure ==="
+          find . -type f -name "*.py" -o -name "*.txt" -o -name "*.yml" | sort
+          echo ""
+          echo "=== Python Script ==="
+          cat src/breaking_news_bot.py 2>/dev/null || echo "No src/breaking_news_bot.py found"
+      
+      - name: 🐍 Check Python
+        run: |
+          echo "Python version:"
+          python --version
+          echo ""
+          echo "Python path:"
+          which python
+      
+      - name: 📦 Check requirements
+        run: |
+          echo "=== Requirements.txt ==="
+          if [ -f requirements.txt ]; then
+            cat requirements.txt
+          else
+            echo "requirements.txt not found!"
+          fi
+      
+      - name: 🔧 Test imports
+        run: |
+          echo "=== Testing imports ==="
+          python -c "import feedparser; import requests; print('✅ All imports work')"
